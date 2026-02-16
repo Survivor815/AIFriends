@@ -15,7 +15,7 @@ def photo_upload_to(instance, filename):
 def background_image_upload_to(instance, filename):
     ext = filename.split('.')[-1]
     filename = f'{uuid.uuid4().hex[:10]}.{ext}'
-    return f'character/background_images/{instance.author.user_id}_{filename}'
+    return f'character/background_image/{instance.author.user_id}_{filename}'
 
 
 class Character(models.Model):
