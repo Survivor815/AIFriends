@@ -30,21 +30,22 @@ class UpdateProfileView(APIView):
                 return Response({
                     'result': '用户名已存在'
                 })
+
             if photo:
                 remove_old_photo(user_profile.photo)
-                user_profile.profile = profile
-                user_profile.update_time = now()
-                user_profile.save()
-                user.username = username
-                user.save()
-                return Response({
-                    'result': 'success',
-                    'user_id': user.id,
-                    'username': user.username,
-                    'profile': user_profile.profile,
-                    'photo': user_profile.photo.url,
-                })
-
+                user_profile.photo = photo
+            user_profile.profile = profile
+            user_profile.update_time = now()
+            user_profile.save()
+            user.username = username
+            user.save()
+            return Response({
+                'result': 'success',
+                'user_id': user.id,
+                'username': user.username,
+                'profile': user_profile.profile,
+                'photo': user_profile.photo.url,
+            })
         except:
             return Response({
                 'result': '系统异常，请稍后重试'
