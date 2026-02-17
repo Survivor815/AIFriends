@@ -22,6 +22,8 @@ class GetSingleCharacterView(APIView):
                 }
             })
         except:
+            import traceback;
+            print(traceback.format_exc())
             return Response({
-                'reuslt': '系统异常，请稍后重试'
+                'result': '系统异常，请稍后重试'
             })
