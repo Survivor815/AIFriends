@@ -32,7 +32,6 @@ async function loadMore() {
       }
     })
     const data = res.data
-    console.log(data)
     if (data.result === 'success') {
       userProfile.value = data.user_profile
       newCharacters = data.characters
