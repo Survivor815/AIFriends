@@ -13,5 +13,5 @@ class Friend(models.Model):
     update_time = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"{self.character.name} - {self.me.user.name} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"{self.character.name} - {self.me.user.username} - {localtime(self.create_time).strftime('%Y-%m-%d %H:%M:%S')}"
 
