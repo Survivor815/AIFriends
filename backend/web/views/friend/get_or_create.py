@@ -6,7 +6,7 @@ from web.models.friend import Friend
 from web.models.user import UserProfile
 
 
-class GetOrCreateView(APIView):
+class GetOrCreateFriendView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
         try:
@@ -39,6 +39,6 @@ class GetOrCreateView(APIView):
                 }
             })
         except:
-            return Response ({
+            return Response({
                 'result': '系统异常，请稍后重试'
             })
