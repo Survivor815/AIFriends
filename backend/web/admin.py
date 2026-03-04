@@ -16,7 +16,8 @@ class CharacterAdmin(admin.ModelAdmin):
 
 @admin.register(Friend)
 class FriendAdmin(admin.ModelAdmin):
-    raw_id_fields = ('me', 'character')
+    raw_id_fields = ('me', 'character',)
+
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
