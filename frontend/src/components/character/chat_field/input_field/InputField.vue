@@ -86,7 +86,7 @@ defineExpose({
       v-else
       @close="showMic = false"
       @send="handleSend"
-      @stop="handleSend"
+      @stop="handleStop"
   />
 </template>
 
