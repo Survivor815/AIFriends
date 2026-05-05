@@ -1,24 +1,22 @@
-from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from web.models.character import Voice
+from web.models.user import UserProfile
 
 
-class GetVoiceList(APIView):
+class GetUserInfoView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         try:
-            voices_raw = Voice.objects.order_by('id')
-            voices = []
-            for v in voices_raw:
-                voices.append({
-                    'id': v.id,
-                    'name': v.name,
-                })
+            user = request.user
+            user_profile = UserProfile.objects.get(user=user)
             return Response({
                 'result': 'success',
-                'voices': voices,
+                'user_id': user.id,
+                'username': user.username,
+                'photo': user_profile.photo.url,
+                'profile': user_profile.profile,
             })
         except:
             return Response({

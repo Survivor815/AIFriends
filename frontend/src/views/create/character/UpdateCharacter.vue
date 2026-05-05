@@ -19,6 +19,11 @@ const character = ref(null)
 const voices = ref([])
 const curVoiceId = ref(null)
 
+const handleVoiceRefresh = (newVoice) => {
+  voices.value.unshift(newVoice)
+  curVoiceId.value = newVoice.id
+}
+
 onMounted(async () => {
   try {
     const res = await api.get('/api/create/character/get_single/', {
@@ -102,7 +107,7 @@ async function handleUpdate() {
         <h3 class="text-lg font-bold my-4">更新角色</h3>
         <Photo ref="photo-ref" :photo="character.photo" />
         <Name ref="name-ref" :name="character.name" />
-        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId" />
+        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId" @refresh="handleVoiceRefresh"/>
         <Profile ref="profile-ref" :profile="character.profile" />
         <BackgroundImage ref="background-image-ref" :backgroundImage="character.background_image" />
 

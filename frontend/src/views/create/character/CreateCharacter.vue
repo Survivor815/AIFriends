@@ -23,6 +23,12 @@ const errorMessage = ref('')
 const voices = ref([])
 const curVoiceId = ref(null)
 
+
+const handleVoiceRefresh = (newVoice) => {
+  voices.value.unshift(newVoice)
+  curVoiceId.value = newVoice.id
+}
+
 onMounted(async () => {
   try {
     const res = await api.get('/api/create/character/voice/get_list/', {})
@@ -88,7 +94,8 @@ async function handleCreate() {
         <h3 class="text-lg font-bold my-4">创建角色</h3>
         <Photo ref="photo-ref" />
         <Name ref="name-ref" />
-        <Voice ref="voice-ref" :voices="voices" :curVoiceId="curVoiceId" />
+        <Voice ref="voice-ref" :voices="voices"
+             :curVoiceId="curVoiceId" @refresh="handleVoiceRefresh"/>
         <Profile ref="profile-ref" />
         <BackgroundImage ref="background-image-ref" />
 

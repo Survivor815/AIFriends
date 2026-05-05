@@ -1,12 +1,19 @@
 <script setup>
 import {ref, watch} from "vue";
+import VoiceRecorder from "@/views/create/character/components/voicerecorder/VoiceRecorder.vue";
 
-const props = defineProps(['voices', 'curVoiceId'])
+const props=defineProps(['voices','curVoiceId',''])
+const emit = defineEmits(["refresh"])
 const myVoice = ref(props.curVoiceId)
 
 watch(() => props.curVoiceId, newVal => {
   myVoice.value = newVal
 })
+
+const handleNewVoice = (voice) => {
+  // 通知父组件刷新列表
+  emit("refresh", voice)
+}
 
 defineExpose({
   myVoice,
@@ -23,6 +30,7 @@ defineExpose({
           :value="voice.id"
       >{{ voice.name }}</option>
     </select>
+    <VoiceRecorder @success="handleNewVoice" />
   </fieldset>
 </template>
 
