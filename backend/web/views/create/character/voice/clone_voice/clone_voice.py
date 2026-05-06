@@ -9,45 +9,67 @@ from rest_framework.views import APIView
 from backend import settings
 from web.models.character import Voice
 from web.views.create.character.voice.custom.create_voice import create_voice
+
+
 class CloneVoiceView(APIView):
     permission_classes = (IsAuthenticated,)
+
     def post(self, request):
         try:
-            audio=request.FILES['audio']
-            name=request.data.get('name',"voice")
+            audio = request.FILES.get('audio')
+            name = request.data.get('name', "voice")
 
             if not audio:
                 return Response({
                     'result': '语音为空，请重试',
                 })
-            #保存语音
-            file_name = f"{uuid.uuid4().hex}.mp3"
+
+            # 获取原始后缀
+            ext = os.path.splitext(audio.name)[-1]
+            if not ext:
+                ext = ".webm"
+
+            # 限制文件大小
+            if audio.size > 5 * 1024 * 1024:
+                return Response({'result': '音频不能超过5MB'})
+
+            # 保存语音
+            file_name = f"{uuid.uuid4().hex}{ext}"
             file_path = os.path.join(settings.MEDIA_ROOT, "tmp", file_name)
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
-            with open(file_path,'wb') as f:
+
+            with open(file_path, 'wb') as f:
                 for chunk in audio.chunks():
                     f.write(chunk)
 
             voice_url = f"{settings.MEDIA_URL}tmp/{file_name}"
-            res=create_voice(voice_url,prefix=str(name))
-            voice_id=res.get("output",{}).get("voice_id")
+
+            # 调用音色复刻
+            res = create_voice(voice_url, prefix=str(name))
+            voice_id = res.get("output", {}).get("voice_id")
+
             if not voice_id:
                 return Response({
-                    'result':"复刻语音失败",
-                    'detail':res
+                    'result': "复刻语音失败",
+                    'detail': res
                 })
-            voice_obj=Voice.objects.create(
+
+            voice_obj = Voice.objects.create(
                 name=name,
                 voice_id=voice_id
             )
+
+            # 删除临时文件
             os.remove(file_path)
+
             return Response({
-                'result':"success",
-                'voice':{
-                    "id":voice_obj.id,
-                    "name":voice_obj.name
+                'result': "success",
+                'voice': {
+                    "id": voice_obj.id,
+                    "name": voice_obj.name
                 }
             })
+
         except Exception as e:
             traceback.print_exc()
             return Response({
